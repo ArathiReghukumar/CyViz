@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tutorial Demo</title>
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="script.js"></script>
+    <script type="text/javascript">
+        hotkeys('a,d', function (event, handler) {
+            switch (handler.key) {
+                case 'a': prevFrame();
+                    break;
+                case 'd': nextFrame();
+                    break;
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="container"></div>
+    
+    <script>
+        const container = document.getElementById('container');
+        const width = container.scrollWidth;
+        const height = container.scrollHeight || 800;
+
+        var graph = null;
+        var currFrameNumber = 0;
+        currFrame = fetch('http://127.0.0.1:5000/data/0')
+            .then((res) => res.json())
+            .then((data) => preprocessData(data))
+            .then((data) => {
+                createGraph(data);
+            });
+    </script>
+</body>
+</html>
