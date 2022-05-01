@@ -1,6 +1,24 @@
 <html>
 
 <head>
+
+  
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css">
+
+  
+
+
   <title>CyViz</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -9,69 +27,138 @@
   <style>
     body {
       margin: 0;
-      background: #adc6da;
+      background-repeat: repeat-x;
+      height: 100vh;
     }
+    .flow{
 
-    .navbar {
-      overflow: hidden;
-      background-color: white;
-      position: fixed;
-      top: 0;
-      width: 100%;
-    }
-
-    .navbar a {
-      float: left;
-      display: block;
-      color: black;
-      text-align: center;
-      padding: 10px 8px;
-      text-decoration: none;
+      color: whitesmoke;
       font-size: 18px;
     }
-
-    .navbar a:hover {
-      color: #adc6da;
-    }
-
-    .c1 a:hover {
+    .head{
+      font-size: 40px;
       color: white;
     }
 
+.hero{
+background-repeat: repeat-x;
+
+}
+ 
     .container {
       padding: 18px;
       margin-top: 35px;
-      height: 600px;
+      height: 60px;
     }
-  </style>
-</head>
+    #logo {
+  display: inline-block;
+  margin: 0px; 
+  height: 30px;
+  width: auto; 
+  border-radius: 50%; 
+}
 
+  </style>
+  
+
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.sticky.js"></script>
+  <script src="js/main.js"></script>
+  
+</head>
+<form method="POST" action="">
+  <div class="hero" style="background-image: url('hero1.jpg'); background-repeat: repeat-x;"></div>
+ 
 <body class="w3-theme-d5">
-  <form method="POST" action="">
-    <div class="navbar">
-      <a href="http://127.0.0.1:5000/view1">Graph 1</a>
-      <a href="http://127.0.0.1:5000/view2">Graph 2</a>
-      <a href="flowchart.html">Flowchart</a>
-    </div>"
-    </div>
+  
+
+  
+  <header class="site-navbar" role="banner">
+
     <div class="container">
-      <h1>
-        CyViz (Group-2)
-      </h1>
-      <p>
-        What is citation analysis?
-        <br>
-        Citation analysis is a way of measuring the relative importance or impact of an author, an article or a
-        publication by counting the number of times it has been cited by other works.
-        </br>
-      </p>
-      <img src="cit.png" alt="Error" width="500" height="333">
-      <br>
-      </br>
-      <p class="c1"><a href='https://docs.openalex.org/api'>Openalex</a> </p>
-      <p class="c1"> <a href='https://g6.antv.vision/en'> G6</a></p>
-    </div>
-  </form>
+      <div class="row align-items-center">
+        
+        <div class="col-11 col-xl-2">
+        
+        </div>
+        <div class="col-12 col-md-10 d-none d-xl-block">
+          <nav class="site-navigation position-relative text-right" role="navigation">
+        
+<h1 class="head" style="text-align: center;"> Temporal  Citation Network Analysis (CyViz)</h1>
+<br>
+            <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
+              <li><a  class="a" href="http://127.0.0.1:5000/view1"><span>Concept Graph</span></a></li>
+      
+              <li class="has-children">
+                <img id="logo" src="au.png">
+                <a href=""><span>Authors</span></a>
+                <ul class="dropdown arrow-top">
+                  <li><a  href="http://127.0.0.1:5000/view2">James Abello</a></li>
+                  <li><a href="http://127.0.0.1:5000/view4">Jason Priem</a></li>
+                  <li><a href="http://127.0.0.1:5000/view5">Saed Sayad</a></li>
+                  <li><a href="http://127.0.0.1:5000/view6">Badri Nath</a></li>
+                  <li><a href="http://127.0.0.1:5000/view7">Casimir Kulikowski</a></li>
+                  <li><a href="http://127.0.0.1:5000/view8">Ahmed Elgammal</a></li>
+                  <li><a href="http://127.0.0.1:5000/view9">Eric Allender</a></li>
+                  <li><a href="http://127.0.0.1:5000/view10">Tomasz Imielinski</a></li>
+                  <li><a href="http://127.0.0.1:5000/view11">Desheng Zhang</a></li>
+                </ul>
+              </li>
+        
+              <li><a href="http://127.0.0.1:5000/view3"><span>Map</span></a></li>
+
+              <li><a href="flowchart.html"><span>flowchart</span></a></li>
+
+        
+              <ul class="dropdown arrow-top">
+             
+            
+              </ul>
+
+    
+            </ul>
+          </nav>
+        </div>
+      
+   
+ 
+ <div class="flow">
+    <p >
+    <h1 class="head">ABOUT</h1>
+    What is citation analysis in research? <br>
+    Citation analysis is the examination of the impact and assumed quality of an article, an author or an institution based on the number of times works and/or authors have been cited by others.
+    
+  </p>
+  <p class="flow">Views in our Representation </p>
+ 
+  
+    <ul>
+      <li>
+        <b>Interplay of Concepts:</b> <br>
+        Explore connectivity between topics in a field over time and establish paradigm shifts in a field (when a new paper establishes a completely new and better way of doing things)
+
+
+      </li>
+<li>
+  <b> Study of Author Works</b> <br>
+  Visualise changes in paper influence for a given author at a time. The works that cite his/her works are represented by nodes connected to a central node which represents the author entity.
+
+</li>
+  
+<li>
+  <b>Map Graph for Institutions:</b><br>
+  Location based plot showing collaboration between universities for research.
+</li>
+</ul>
+</div>
+</div>
+</div>
+  
+    
+</form>
 </body>
+
 
 </html>

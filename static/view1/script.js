@@ -47,9 +47,13 @@ function scaleData(data, nodeMin, nodeMax, edgeMin, edgeMax) {
 function preprocessData(data) {
     let l1_data = data.level1;
     let l2_data = data.level2;
+    let year = data.year;
+    $('#year_indicator').text(year);
 
     l1_data = scaleData(l1_data, 30, 50, 800, 1200);
     l2_data = scaleData(l2_data, 20, 100, 800, 1200);
+
+    
 
     return [l1_data, l2_data]
 }
@@ -68,13 +72,16 @@ function createMainGraph(data, width, height) {
             duration: 500, // Number, the duration of one animation
             // easing: 'easePolyIn', // String, the easing function
         },
+        // fitView: true,
+        // fitViewPadding: 100,
+        // fitCenter: true,
 
         layout: {
             type: 'gForce',
             center: [700, 500],
             edgeStrength: (e) => { return e.weight; },
             nodeStrength: (n) => { return n.size + 200; },
-            linkDistance: 50,
+            linkDistance: 100,
             workerEnabled: true, // Whether to activate web-worker
         },
 
@@ -145,9 +152,16 @@ function createSubGraph(data, width, height) {
         layout: {
             type: 'concentric',
             center: [width / 2, height / 2],
-            nodeSize: 50,
+            nodeSize: 40,
             preventOverlap: true,
             workerEnabled: true, // Whether to activate web-worker
+        },
+
+        nodeStateStyles: {
+            selected: {
+                stroke: '#7509bd',
+                lineWidth: 3,
+            }
         }
     });
 
@@ -161,6 +175,30 @@ function createSubGraph(data, width, height) {
 
     subGraph.render();
 
+    subGraph.on('afterlayout', (e) => {
+        subGraph.zoomTo(0.8, {x: width/2, y: height/2});
+    })
+
+    subGraph.on('node:click', (e) => {
+
+        let node = e.item;
+        if(node.hasState('selected'))
+        {
+            subGraph.setItemState(e.item, 'selected', false);
+            let concept_id = node._cfg.model.cid;
+            meta['selected_level1_concept_ids'].delete(concept_id);
+        } else {
+            subGraph.setItemState(e.item, 'selected', true);
+            let concept_id = node._cfg.model.cid;
+            meta['selected_level1_concept_ids'].add(concept_id);
+        }
+
+        refreshMainGraph();
+
+    });
+
+
+
     if (typeof window !== 'undefined')
         window.onresize = () => {
             if (!subGraph || subGraph.get('destroyed')) return;
@@ -169,8 +207,54 @@ function createSubGraph(data, width, height) {
         };
 }
 
+
+function refreshMainGraph() {
+
+    let selected_level1_concept_ids = [...meta['selected_level1_concept_ids']]
+    let jsonBody = {
+        level1_filter: selected_level1_concept_ids
+    };
+
+    return fetch('http://127.0.0.1:5000/view1/data/' + currFrameNumber, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonBody)
+    })
+    .then((res) => res.json())
+        .then((data) => preprocessData(data))
+        .then((data) => {
+            let l1_data = data[0];
+            let l2_data = data[1];
+            mainGraph.changeData(l2_data);
+            subGraph.changeData(l1_data);
+            $('#papers').empty();
+            
+            selected_level1_concepts = meta['selected_level1_concept_ids'];
+            [...selected_level1_concepts].forEach((x) => {
+                subGraph.setItemState(x, 'selected', true)
+            })
+
+
+        })
+}
+
+
 function nextFrame() {
-    return fetch('http://127.0.0.1:5000/view1/data/' + (currFrameNumber + 1))
+
+    let selected_level1_concept_ids = [...meta['selected_level1_concept_ids']]
+    let jsonBody = {
+        level1_filter: selected_level1_concept_ids
+    };
+
+    return fetch('http://127.0.0.1:5000/view1/data/' + (currFrameNumber + 1), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonBody)
+        })
         .then((res) => res.json())
         .then((data) => preprocessData(data))
         .then((data) => {
@@ -179,12 +263,31 @@ function nextFrame() {
             mainGraph.changeData(l2_data);
             subGraph.changeData(l1_data);
             $('#papers').empty();
+            
+            selected_level1_concepts = meta['selected_level1_concept_ids'];
+            [...selected_level1_concepts].forEach((x) => {
+                subGraph.setItemState(x, 'selected', true)
+            })
+
+
         })
         .then(() => currFrameNumber = currFrameNumber + 1) 
 }
 
 function prevFrame() {
-    return fetch('http://127.0.0.1:5000/view1/data/' + (currFrameNumber - 1))
+
+    let selected_level1_concept_ids = [...meta['selected_level1_concept_ids']]
+    let jsonBody = {
+        level1_filter: selected_level1_concept_ids
+    };
+
+    return fetch('http://127.0.0.1:5000/view1/data/' + (currFrameNumber - 1), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonBody)
+        })
         .then((res) => res.json())
         .then((data) => preprocessData(data))
         .then((data) => {
@@ -193,6 +296,11 @@ function prevFrame() {
             mainGraph.changeData(l2_data);
             subGraph.changeData(l1_data);
             $('#papers').empty();
+
+            selected_level1_concepts = meta['selected_level1_concept_ids'];
+            [...selected_level1_concepts].forEach((x) => {
+                subGraph.setItemState(x, 'selected', true)
+            })
         })
         .then(() => currFrameNumber = currFrameNumber - 1) 
 }
@@ -201,14 +309,12 @@ function prevFrame() {
 function getPapers() {
     let concepts = mainGraph.findAllByState('node', 'selected').map(x => x._cfg.model.cid);
     $('#papers').empty();
-    // console.log(concepts.length);
+    
     if(concepts.length == 2) {
         let cid1 = concepts[0];
         let cid2 = concepts[1];
 
-        console.log(concepts);
-
-        // url = 'http://127.0.0.1:5000/papers?cid1=' + cid1 + '&' + 'cid2=' + cid2 + '&' + 'frame_number=' + currFrameNumber;
+        // console.log(concepts);
         let url = `http://127.0.0.1:5000/view1/papers?cid1=${cid1}&cid2=${cid2}&frame_number=${currFrameNumber}`;
         fetch(url)
             .then(res => res.json())

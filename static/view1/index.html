@@ -27,13 +27,18 @@
 </head>
 
 <body class="container-fluid p-0 m-0">
-    <nav class="navbar container-fluid text-dark m-0 p-2">
+    <nav class="navbar container-fluid text-dark m-0 p-2 text-white bg-dark">
         <h2 class="display-6">CyViz</h2>
+        <h2 id='year_indicator' class="display-6">Year</h2>
     </nav>
-    <div class="row p-0 m-2 overflow-hidden">
-        <div id="sub-graph" class="side-container"></div>
-        <div class="col p-0">
+    <div class="row p-0 m-2">
+        
+        <div class="col-8 p-0 border border-2">
             <div id="main-graph" class="main-container"></div>
+        </div>
+        <div class="col p-0 text-end">
+            <div id="sub-graph" class=""></div>
+            <h2 class="m-5">Level-1</h2>
         </div>
     </div>
     <footer class="container-fluid fixed-bottom">
@@ -53,19 +58,35 @@
 
     <script>
         const mainContainer = document.getElementById('main-graph');
-        const mainGraphWidth = mainContainer.scrollWidth;
+        const mainGraphWidth = mainContainer.scrollWidth - 20;
+        // const mainGraphWidth = 720;
         const mainGraphHeight = 720;
         // const height = container.scrollHeight || 800;
 
         const subContainer = document.getElementById('sub-graph');
-        const subGraphWidth = 500;
+        const subGraphWidth = 490;
         const subGraphHeight = 400;
 
         var graph = null;
         var mainGraph = null;
         var subGraph = null;
         var currFrameNumber = 0;
-        currFrame = fetch('http://127.0.0.1:5000/view1/data/0')
+
+        var meta = new Object();
+        meta['selected_level1_concept_ids'] = new Set();
+
+        let selected_level1_concept_ids = [...meta['selected_level1_concept_ids']]
+        let jsonBody = {
+            level1_filter: selected_level1_concept_ids
+        };
+
+        currFrame = fetch('http://127.0.0.1:5000/view1/data/0', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonBody)
+            })
             .then((res) => res.json())
             .then((data) => preprocessData(data))
             .then((data) => {

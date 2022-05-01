@@ -1,5 +1,6 @@
 from typing import *
 import itertools
+import numpy as np
 from datetime import datetime
 
 import networkx as nx
@@ -47,8 +48,13 @@ def normalize_edge_attribute(graph, attribute: str):
     max_points = max(graph.edges[p, q][attribute] for p,q in graph.edges)
     min_points = min(graph.edges[p, q][attribute] for p,q in graph.edges)
 
+    # print(max_points, min_points)
+
     for p,q in graph.edges:
-        graph.edges[p,q][attribute] = (graph.edges[p,q][attribute] - min_points) / (max_points - min_points)
+        graph.edges[p,q][attribute] = (graph.edges[p,q][attribute] - min_points) / (max_points - min_points + 1)
+        graph.edges[p,q][attribute] = 1 - pow(1 - graph.edges[p,q][attribute], 5)
+        graph.edges[p,q][attribute] = graph.edges[p,q][attribute] + 0.35
+
 
     return graph
     

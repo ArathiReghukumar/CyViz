@@ -1,0 +1,23 @@
+.main-graph {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.main-graph {
+
+}
+
+.sub-graph {
+    /* position: -webkit-sticky; */
+    /* position: fixed; */
+    top: 20px;
+    right: 20px; 
+    width: 500px;
+    height: 400px;
+    /* bottom: 10px; */
+    /* background-color: red; */
+
+}

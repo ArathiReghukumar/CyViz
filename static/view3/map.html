@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <style>
+    a:link {
+      color: black;
+      background-color: transparent;
+      text-decoration: none;
+    }
+
+    a:visited {
+      color: grey;
+      background-color: transparent;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: white;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+
+    a:active {
+      color: white;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+  </style>
+  <meta name="description" content="map created using amCharts pixel map generator" />
+
+  <!--
+			This map was created using Pixel Map Generator by amCharts and is licensed under the Creative Commons Attribution 4.0 International License.
+			You may use this map the way you see fit as long as proper attribution to the name of amCharts is given in the form of link to https://pixelmap.amcharts.com/
+			To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/
+
+			If you would like to use this map without any attribution, you can acquire a commercial license for the JavaScript Maps - a tool that was used to produce this map.
+			To do so, visit amCharts Online Store: https://www.amcharts.com/online-store/
+		-->
+
+  <!-- amCharts javascript sources -->
+  <script src="//cdn.amcharts.com/lib/4/core.js"></script>
+  <script src="//cdn.amcharts.com/lib/4/maps.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/geodata/usaLow.js"></script>
+
+  <!-- amCharts javascript code -->
+  <script type="text/javascript">
+    fetch('http://127.0.0.1:5000/view3/institution')
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .then((res) => {
+        var map = am4core.create("map", am4maps.MapChart);
+        map.geodata = am4geodata_usaLow;
+        map.projection = new am4maps.projections.AlbersUsa();
+        var polygonSeries = new am4maps.MapPolygonSeries();
+        polygonSeries.useGeodata = true;
+        map.series.push(polygonSeries);
+
+        var imageSeries = map.series.push(new am4maps.MapImageSeries());
+        var imageSeriesTemplate = imageSeries.mapImages.template;
+        var circle = imageSeriesTemplate.createChild(am4core.Circle);
+        circle.radius = 4;
+        circle.fill = am4core.color("orange");
+        circle.stroke = am4core.color("red");
+        circle.strokeWidth = 2;
+        circle.nonScaling = true;
+        circle.tooltipText = "{title}";
+
+        imageSeriesTemplate.propertyFields.latitude = "latitudes";
+        imageSeriesTemplate.propertyFields.longitude = "longitudes";
+
+        imageSeries.data = res['image'];
+
+        var lineSeries = map.series.push(new am4maps.MapLineSeries());
+        lineSeries.data = [{
+          'multiGeoLine': res['multiGeoLine']
+        }]
+
+
+      });
+  </script>
+</head>
+
+<body style="margin: 0;background-color:lightskyblue;">
+  <div id="map" style="width: 100%; height: 568px;"></div>
+  <form method="post" action="/get_count/">
+    <p>Audio settings:</p>
+
+    <div>
+
+      <input type="number" step="0.001" value="0.5" name="count" class="count">
+
+      <input type="submit">
+
+      <a href="http://127.0.0.1:5000/home.html">Back to home</a>
+    </div>
+  </form>
+</body>
+
+</html>

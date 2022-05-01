@@ -49,7 +49,7 @@ function preprocessData(data) {
 function createGraph(data) {
     nodes = data.nodes;
     let fisheye = new G6.Fisheye({
-        r: 60,
+        r: 80,
         showLabel: true,
         delegateStyle: {
           fill: '#f00',
@@ -57,26 +57,17 @@ function createGraph(data) {
           stroke: '#666',
         },
       });
-    const colors = [
-        '#8FE9FF',
-        '#87EAEF',
-        '#FFC9E3',
-        '#A7C2FF',
-        '#FFA1E3',
-        '#FFE269',
-        '#BFCFEE',
-        '#FFA0C5',
-        '#D5FF86',
-      ];
+    
     graph = new G6.Graph({
         container: 'container',
         width,
         height,
         modes: {
-            default: ['drag-canvas', 'zoom-canvas', 'activate-relations', 'drag-node']
+            default: ['drag-canvas', 'zoom-canvas']
         },
         plugins: [fisheye],
         animate: true,
+    
         animateCfg: {
             duration: 500, // Number, the duration of one animation
             // easing: 'easePolyIn', // String, the easing function
